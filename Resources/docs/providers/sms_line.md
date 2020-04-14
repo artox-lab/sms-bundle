@@ -11,7 +11,7 @@ Provider to connect with [Sms Line](https://mobilemarketing.by/) service.
 ## Example
 
 ``` yaml
-# config/artox_lab_sms.yaml
+# config/packages/artox_lab_sms.yaml
 artox_lab_sms:
     providers:
         sms_line_provider_doc:
