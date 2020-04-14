@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        public: false
+
+    artox_lab_sms.prototype.provider.sms_line:
+        class: ArtoxLab\Bundle\SmsBundle\Provider\SmsLineProvider
+
+    artox_lab_sms.provider.manager:
+        class: ArtoxLab\Bundle\SmsBundle\Service\ProviderManager
+
+    ArtoxLab\Bundle\SmsBundle\Service\ProviderManager: '@artox_lab_sms.provider.manager'

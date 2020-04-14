@@ -1,0 +1,10 @@
+.idea/
+.DS_Store
+
+vendor/
+composer.lock
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
