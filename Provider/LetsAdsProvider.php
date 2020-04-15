@@ -1,16 +1,14 @@
 <?php
 
 /**
- * SmsLine provider
+ * LetsAds provider
  *
  * @author Dmitry Meliukh <d.meliukh@artox.com>
  */
 
-declare(strict_types=1);
-
 namespace ArtoxLab\Bundle\SmsBundle\Provider;
 
-use ArtoxLab\Bundle\SmsBundle\Exception\SmsLineException;
+use ArtoxLab\Bundle\SmsBundle\Exception\LetsAdsException;
 use ArtoxLab\Bundle\SmsBundle\Provider\Traits\RetryApiCallTrait;
 use ArtoxLab\Bundle\SmsBundle\Sms\SmsInterface;
 use GuzzleHttp\Client;
@@ -19,11 +17,11 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 
-class SmsLineProvider implements ProviderInterface
+class LetsAdsProvider implements ProviderInterface
 {
     use RetryApiCallTrait;
 
-    public const API_URL = 'https://api.smsline.by';
+    public const API_URL = 'http://letsads.com/api';
 
     protected const API_CALL_RETRIES = 3;
 
@@ -141,47 +139,29 @@ class SmsLineProvider implements ProviderInterface
     }
 
     /**
-     * Generate request signature
-     *
-     * @param string $string Signature string
-     *
-     * @return string
-     */
-    public function getHash(string $string): string
-    {
-        return hash_hmac('sha256', $string, $this->getPassword());
-    }
-
-    /**
-     * Build request headers
-     *
-     * @param string $signature Token
-     *
-     * @return array
-     */
-    public function buildRequestHeaders(string $signature): array
-    {
-        return [
-            'Content-Type'       => 'application/json',
-            'Authorization-User' => $this->getLogin(),
-            'Authorization'      => 'Bearer ' . $signature,
-        ];
-    }
-
-    /**
      * Build request body
      *
      * @param SmsInterface $sms Sms message
      *
-     * @return array
+     * @return string
      */
-    public function buildRequestBody(SmsInterface $sms): array
+    public function buildRequestBody(SmsInterface $sms): string
     {
-        return [
-            'target' => $this->getSender(),
-            'msisdn' => preg_replace('/[^\D]/', '', $sms->getPhoneNumber()),
-            'text'   => $sms->getMessage(),
-        ];
+        $auth      = '<login>' . $this->getLogin() . '</login><password>' . $this->getPassword() . '</password>';
+        $recipient = '<recipient>' . $sms->getPhoneNumber() . '</recipient>';
+
+        $body  = '<?xml version="1.0" encoding="UTF-8"?>';
+        $body .= '<request>';
+        $body .= '<auth>' . $auth . '</auth>';
+        $body .= sprintf(
+            '<message><from>%s</from><text>%s</text>%s</message>',
+            $this->getSender(),
+            $sms->getMessage(),
+            $recipient
+        );
+        $body .= '</request>';
+
+        return $body;
     }
 
     /**
@@ -190,29 +170,24 @@ class SmsLineProvider implements ProviderInterface
      * @param SmsInterface $sms Sms message
      *
      * @throws GuzzleException
-     * @throws SmsLineException
+     * @throws LetsAdsException
      *
      * @return bool
      */
     public function send(SmsInterface $sms): bool
     {
-        $requestUrl  = sprintf('%s/v3/messages/single/sms', self::API_URL);
         $requestBody = $this->buildRequestBody($sms);
-        $requestBody = json_encode($requestBody);
-        $signature   = $this->getHash('messagessinglesms' . $requestBody);
 
-        $response     = $this->client->request(
+        $response = $this->client->request(
             'POST',
-            $requestUrl,
-            [
-                'headers' => $this->buildRequestHeaders($signature),
-                'body'    => $requestBody,
-            ]
+            self::API_URL,
+            ['body' => $requestBody]
         );
-        $jsonResponse = json_decode($response->getBody()->getContents(), true);
+
+        $xmlResponse = $response->getBody()->getContents();
 
         if (200 !== $response->getStatusCode()) {
-            throw new SmsLineException(json_encode($jsonResponse));
+            throw new LetsAdsException(json_encode($xmlResponse));
         }
 
         return true;

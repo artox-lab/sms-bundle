@@ -6,6 +6,15 @@ Based on [yamilovs/sms-bundle](https://github.com/yamilovs/SmsBundle)
 
 # Installation 
 
+Applications that use Symfony Flex
+----------------------------------
+
+Open a command console, enter your project directory and execute:
+
+```console
+$ composer require artox-lab/sms-bundle
+```
+
 Applications that don't use Symfony Flex
 ----------------------------------------
 
@@ -40,7 +49,8 @@ return [
 
 You can define as many provider configurations as you want. Available providers are:
  
- * [Sms Line](Resources/docs/providers/sms_line.md) [mobilemarketing.by]
+ * [SmsLine](Resources/docs/providers/sms_line.md) [mobilemarketing.by]
+ * [LetsAds](Resources/docs/providers/lets_ads.md) [letsads.com]
 
 # Usage
 

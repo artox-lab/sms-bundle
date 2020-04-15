@@ -1,6 +1,6 @@
 # Sms Line
 
-Provider to connect with [SmsLine](https://mobilemarketing.by/) service.
+Provider to connect with [LetsAds](http://letsads.com/) service.
 
 ## Parameters
 
@@ -14,8 +14,8 @@ Provider to connect with [SmsLine](https://mobilemarketing.by/) service.
 # config/packages/artox_lab_sms.yaml
 artox_lab_sms:
     providers:
-        sms_line_provider_doc: # your custom provider nam
-            sms_line:
+        lets_ads_provider_doc: # your custom provider nam
+            lets_ads:
                 login: 'your_login'
                 password: 'your_secret'
                 sender: 'sender'
