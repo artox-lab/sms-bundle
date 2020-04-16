@@ -179,7 +179,7 @@ class SmsLineProvider implements ProviderInterface
     {
         return [
             'target' => $this->getSender(),
-            'msisdn' => preg_replace('/[^\D]/', '', $sms->getPhoneNumber()),
+            'msisdn' => preg_replace('/[^\d]/', '', $sms->getPhoneNumber()),
             'text'   => $sms->getMessage(),
         ];
     }
