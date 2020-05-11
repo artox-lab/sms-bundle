@@ -8,6 +8,9 @@ services:
     artox_lab_sms.prototype.provider.lets_ads:
         class: ArtoxLab\Bundle\SmsBundle\Provider\LetsAdsProvider
 
+    artox_lab_sms.prototype.provider.infobip:
+        class: ArtoxLab\Bundle\SmsBundle\Provider\InfobipProvider
+
     artox_lab_sms.provider.manager:
         class: ArtoxLab\Bundle\SmsBundle\Service\ProviderManager
 

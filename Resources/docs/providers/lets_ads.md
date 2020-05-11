@@ -14,7 +14,7 @@ Provider to connect with [LetsAds](http://letsads.com/) service.
 # config/packages/artox_lab_sms.yaml
 artox_lab_sms:
     providers:
-        lets_ads_provider_doc: # your custom provider nam
+        lets_ads_provider_doc: # your custom provider name
             lets_ads:
                 login: 'your_login'
                 password: 'your_secret'

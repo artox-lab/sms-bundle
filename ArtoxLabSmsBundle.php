@@ -12,6 +12,7 @@ namespace ArtoxLab\Bundle\SmsBundle;
 
 use ArtoxLab\Bundle\SmsBundle\DependencyInjection\Compiler\ProviderCompilerPass;
 use ArtoxLab\Bundle\SmsBundle\DependencyInjection\ArtoxLabSmsExtension;
+use ArtoxLab\Bundle\SmsBundle\DependencyInjection\Factory\Provider\InfobipProviderFactory;
 use ArtoxLab\Bundle\SmsBundle\DependencyInjection\Factory\Provider\LetsAdsProviderFactory;
 use ArtoxLab\Bundle\SmsBundle\DependencyInjection\Factory\Provider\SmsLineProviderFactory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -45,6 +46,7 @@ class ArtoxLabSmsBundle extends Bundle
         $extension = new ArtoxLabSmsExtension();
         $extension->addProviderFactory(new SmsLineProviderFactory());
         $extension->addProviderFactory(new LetsAdsProviderFactory());
+        $extension->addProviderFactory(new InfobipProviderFactory());
 
         return $extension;
     }

@@ -1,6 +1,6 @@
-# Sms Line
+# Infobip
 
-Provider to connect with [SmsLine](https://mobilemarketing.by/) service.
+Provider to connect with [Infobip](https://www.infobip.com/) service.
 
 ## Parameters
 
@@ -14,8 +14,8 @@ Provider to connect with [SmsLine](https://mobilemarketing.by/) service.
 # config/packages/artox_lab_sms.yaml
 artox_lab_sms:
     providers:
-        sms_line_provider_doc: # your custom provider name
-            sms_line:
+        infobip_provider_doc: # your custom provider name
+            infobip:
                 login: 'your_login'
                 password: 'your_secret'
                 sender: 'sender'
