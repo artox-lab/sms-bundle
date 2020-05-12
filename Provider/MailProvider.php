@@ -42,16 +42,16 @@ class MailProvider implements ProviderInterface
     /**
      * Username
      *
-     * @var string
+     * @var string|null
      */
-    private $username = '';
+    private $username;
 
     /**
      * Password
      *
-     * @var string
+     * @var string|null
      */
-    private $password = '';
+    private $password;
 
     /**
      * Sender
@@ -66,29 +66,6 @@ class MailProvider implements ProviderInterface
      * @var string
      */
     private $recipients;
-
-    /**
-     * Mailer
-     *
-     * @var Swift_Mailer
-     */
-    private $mailer;
-
-    /**
-     * MailProvider constructor.
-     */
-    public function __construct()
-    {
-        $transport = new Swift_SmtpTransport(
-            $this->getHost(),
-            $this->getPort(),
-            $this->getEncryption()
-        );
-        $transport->setUsername($this->getUsername());
-        $transport->setPassword($this->getPassword());
-
-        $this->mailer = new Swift_Mailer($transport);
-    }
 
     /**
      * Host of mailer
@@ -115,11 +92,59 @@ class MailProvider implements ProviderInterface
     }
 
     /**
+     * Port of mailer
+     *
+     * @return int
+     */
+    public function getPort(): int
+    {
+        return $this->port;
+    }
+
+    /**
+     * Port of mailer
+     *
+     * @param int $port Port of mailer
+     *
+     * @return $this
+     */
+    public function setPort(int $port): self
+    {
+        $this->port = $port;
+
+        return $this;
+    }
+
+    /**
+     * Encryption type
+     *
+     * @return string|null
+     */
+    public function getEncryption(): ?string
+    {
+        return $this->encryption;
+    }
+
+    /**
+     * Encryption type
+     *
+     * @param string|null $encryption Encryption type
+     *
+     * @return $this
+     */
+    public function setEncryption($encryption): self
+    {
+        $this->encryption = $encryption;
+
+        return $this;
+    }
+
+    /**
      * Username
      *
-     * @return string
+     * @return string|null
      */
-    public function getUsername(): string
+    public function getUsername(): ?string
     {
         return $this->username;
     }
@@ -127,11 +152,11 @@ class MailProvider implements ProviderInterface
     /**
      * Username of mailer
      *
-     * @param string $username Username
+     * @param string|null $username Username
      *
      * @return $this
      */
-    public function setUsername(string $username): self
+    public function setUsername($username): self
     {
         $this->username = $username;
 
@@ -141,9 +166,9 @@ class MailProvider implements ProviderInterface
     /**
      * Password
      *
-     * @return string
+     * @return string|null
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -151,11 +176,11 @@ class MailProvider implements ProviderInterface
     /**
      * Password of mailer
      *
-     * @param string $password Password
+     * @param string|null $password Password
      *
      * @return $this
      */
-    public function setPassword(string $password): self
+    public function setPassword($password): self
     {
         $this->password = $password;
 
@@ -214,54 +239,6 @@ class MailProvider implements ProviderInterface
     }
 
     /**
-     * Port of mailer
-     *
-     * @return int
-     */
-    public function getPort(): int
-    {
-        return $this->port;
-    }
-
-    /**
-     * Port of mailer
-     *
-     * @param int $port Port of mailer
-     *
-     * @return $this
-     */
-    public function setPort(int $port): self
-    {
-        $this->port = $port;
-
-        return $this;
-    }
-
-    /**
-     * Encryption type
-     *
-     * @return string|null
-     */
-    public function getEncryption(): ?string
-    {
-        return $this->encryption;
-    }
-
-    /**
-     * Encryption type
-     *
-     * @param string|null $encryption Encryption type
-     *
-     * @return $this
-     */
-    public function setEncryption($encryption): self
-    {
-        $this->encryption = $encryption;
-
-        return $this;
-    }
-
-    /**
      * Send message
      *
      * @param SmsInterface $sms Sms message
@@ -270,6 +247,21 @@ class MailProvider implements ProviderInterface
      */
     public function send(SmsInterface $sms): bool
     {
+        $transport = new Swift_SmtpTransport(
+            $this->getHost(),
+            $this->getPort(),
+            $this->getEncryption()
+        );
+
+        if (null !== $this->getUsername()
+            && null !== $this->getPassword()
+        ) {
+            $transport->setUsername($this->getUsername());
+            $transport->setPassword($this->getPassword());
+        }
+
+        $mailer = new Swift_Mailer($transport);
+
         $message = (new Swift_Message())
             ->setFrom($this->getSender())
             ->setTo($this->getRecipients())
@@ -283,7 +275,7 @@ class MailProvider implements ProviderInterface
                 'text/html'
             );
 
-        $this->mailer->send($message);
+        $mailer->send($message);
 
         return true;
     }

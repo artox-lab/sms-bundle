@@ -17,7 +17,9 @@ services:
     artox_lab_sms.prototype.provider.log:
         class: ArtoxLab\Bundle\SmsBundle\Provider\LogProvider
         arguments:
-          ['@?']
+          ['@logger']
+        tags:
+            - { name: monolog.logger}
 
     artox_lab_sms.prototype.provider.slack:
         class: ArtoxLab\Bundle\SmsBundle\Provider\SlackProvider
