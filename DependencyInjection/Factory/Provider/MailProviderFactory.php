@@ -62,7 +62,6 @@ class MailProviderFactory extends AbstractProviderFactory
             ->end()
             ->integerNode('port')
             ->isRequired()
-            ->cannotBeEmpty()
             ->end()
             ->scalarNode('encryption')
             ->defaultNull()
