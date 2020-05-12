@@ -53,6 +53,12 @@ You can define as many provider configurations as you want. Available providers 
  * [LetsAds](Resources/docs/providers/lets_ads.md) [letsads.com]
  * [InfoBip](Resources/docs/providers/infobip.md) [infobip.com]
 
+For debug:
+ * [Log](Resources/docs/providers/log.md)
+ * [Mail](Resources/docs/providers/mail.md)
+ * [Slack](Resources/docs/providers/slack.md)
+ 
+ 
 # Usage
 
 #### In your controller

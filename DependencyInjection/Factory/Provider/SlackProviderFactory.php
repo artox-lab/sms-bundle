@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Factory: Infobip
+ * Factory: Slack
  *
  * @author Dmitry Meliukh <d.meliukh@artox.com>
  */
@@ -13,7 +13,7 @@ namespace ArtoxLab\Bundle\SmsBundle\DependencyInjection\Factory\Provider;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 
-class InfobipProviderFactory extends AbstractProviderFactory
+class SlackProviderFactory extends AbstractProviderFactory
 {
 
     /**
@@ -23,7 +23,7 @@ class InfobipProviderFactory extends AbstractProviderFactory
      */
     public function getName(): string
     {
-        return 'infobip';
+        return 'slack';
     }
 
     /**
@@ -35,10 +35,9 @@ class InfobipProviderFactory extends AbstractProviderFactory
      */
     public function getDefinition(array $config): ChildDefinition
     {
-        return (new ChildDefinition('artox_lab_sms.prototype.provider.infobip'))
-            ->addMethodCall('setLogin', [$config['login']])
-            ->addMethodCall('setPassword', [$config['password']])
-            ->addMethodCall('setSender', [$config['sender']]);
+        return (new ChildDefinition('artox_lab_sms.prototype.provider.slack'))
+            ->addMethodCall('setToken', [$config['token']])
+            ->addMethodCall('setChannel', [$config['channel']]);
     }
 
     /**
@@ -52,15 +51,11 @@ class InfobipProviderFactory extends AbstractProviderFactory
     {
         $arrayNodeDefinition
             ->children()
-            ->scalarNode('login')
+            ->scalarNode('token')
             ->isRequired()
             ->cannotBeEmpty()
             ->end()
-            ->scalarNode('password')
-            ->isRequired()
-            ->cannotBeEmpty()
-            ->end()
-            ->scalarNode('sender')
+            ->scalarNode('channel')
             ->isRequired()
             ->cannotBeEmpty()
             ->end()

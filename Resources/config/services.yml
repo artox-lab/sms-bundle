@@ -11,6 +11,17 @@ services:
     artox_lab_sms.prototype.provider.infobip:
         class: ArtoxLab\Bundle\SmsBundle\Provider\InfobipProvider
 
+    artox_lab_sms.prototype.provider.mail:
+        class: ArtoxLab\Bundle\SmsBundle\Provider\MailProvider
+
+    artox_lab_sms.prototype.provider.log:
+        class: ArtoxLab\Bundle\SmsBundle\Provider\LogProvider
+        arguments:
+          ['@?']
+
+    artox_lab_sms.prototype.provider.slack:
+        class: ArtoxLab\Bundle\SmsBundle\Provider\SlackProvider
+
     artox_lab_sms.provider.manager:
         class: ArtoxLab\Bundle\SmsBundle\Service\ProviderManager
 

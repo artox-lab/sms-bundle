@@ -6,8 +6,9 @@
  * @author Dmitry Meliukh <d.meliukh@artox.com>
  */
 
-namespace ArtoxLab\Bundle\SmsBundle\Provider;
+declare(strict_types=1);
 
+namespace ArtoxLab\Bundle\SmsBundle\Provider;
 
 use ArtoxLab\Bundle\SmsBundle\Exception\InfobipException;
 use ArtoxLab\Bundle\SmsBundle\Sms\SmsInterface;

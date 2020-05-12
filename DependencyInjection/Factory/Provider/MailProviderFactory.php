@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Factory: Infobip
+ * Factory: Mail
  *
  * @author Dmitry Meliukh <d.meliukh@artox.com>
  */
@@ -13,7 +13,7 @@ namespace ArtoxLab\Bundle\SmsBundle\DependencyInjection\Factory\Provider;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 
-class InfobipProviderFactory extends AbstractProviderFactory
+class MailProviderFactory extends AbstractProviderFactory
 {
 
     /**
@@ -23,7 +23,7 @@ class InfobipProviderFactory extends AbstractProviderFactory
      */
     public function getName(): string
     {
-        return 'infobip';
+        return 'mail';
     }
 
     /**
@@ -35,10 +35,14 @@ class InfobipProviderFactory extends AbstractProviderFactory
      */
     public function getDefinition(array $config): ChildDefinition
     {
-        return (new ChildDefinition('artox_lab_sms.prototype.provider.infobip'))
-            ->addMethodCall('setLogin', [$config['login']])
+        return (new ChildDefinition('artox_lab_sms.prototype.provider.mail'))
+            ->addMethodCall('setHost', [$config['host']])
+            ->addMethodCall('setPort', [$config['port']])
+            ->addMethodCall('setEncryption', [$config['encryption']])
+            ->addMethodCall('setUsername', [$config['username']])
             ->addMethodCall('setPassword', [$config['password']])
-            ->addMethodCall('setSender', [$config['sender']]);
+            ->addMethodCall('setSender', [$config['sender']])
+            ->addMethodCall('setRecipients', [$config['recipients']]);
     }
 
     /**
@@ -52,15 +56,26 @@ class InfobipProviderFactory extends AbstractProviderFactory
     {
         $arrayNodeDefinition
             ->children()
-            ->scalarNode('login')
+            ->scalarNode('host')
             ->isRequired()
             ->cannotBeEmpty()
+            ->end()
+            ->integerNode('port')
+            ->isRequired()
+            ->cannotBeEmpty()
+            ->end()
+            ->scalarNode('encryption')
+            ->defaultNull()
+            ->end()
+            ->scalarNode('username')
             ->end()
             ->scalarNode('password')
+            ->end()
+            ->scalarNode('sender')
             ->isRequired()
             ->cannotBeEmpty()
             ->end()
-            ->scalarNode('sender')
+            ->scalarNode('recipients')
             ->isRequired()
             ->cannotBeEmpty()
             ->end()
