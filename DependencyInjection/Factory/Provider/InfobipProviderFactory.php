@@ -36,8 +36,7 @@ class InfobipProviderFactory extends AbstractProviderFactory
     public function getDefinition(array $config): ChildDefinition
     {
         return (new ChildDefinition('artox_lab_sms.prototype.provider.infobip'))
-            ->addMethodCall('setLogin', [$config['login']])
-            ->addMethodCall('setPassword', [$config['password']])
+            ->addMethodCall('setToken', [$config['token']])
             ->addMethodCall('setSender', [$config['sender']]);
     }
 
@@ -52,11 +51,7 @@ class InfobipProviderFactory extends AbstractProviderFactory
     {
         $arrayNodeDefinition
             ->children()
-            ->scalarNode('login')
-            ->isRequired()
-            ->cannotBeEmpty()
-            ->end()
-            ->scalarNode('password')
+            ->scalarNode('token')
             ->isRequired()
             ->cannotBeEmpty()
             ->end()

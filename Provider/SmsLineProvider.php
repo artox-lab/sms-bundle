@@ -199,15 +199,14 @@ class SmsLineProvider implements ProviderInterface
     {
         $requestUrl  = sprintf('%s/v3/messages/single/sms', self::API_URL);
         $requestBody = $this->buildRequestBody($sms);
-        $requestBody = json_encode($requestBody);
-        $signature   = $this->getHash('messagessinglesms' . $requestBody);
+        $signature   = $this->getHash('messagessinglesms' . json_encode($requestBody));
 
         $response     = $this->client->request(
             'POST',
             $requestUrl,
             [
                 'headers' => $this->buildRequestHeaders($signature),
-                'body'    => $requestBody,
+                'json'    => $requestBody,
             ]
         );
         $jsonResponse = json_decode($response->getBody()->getContents(), true);

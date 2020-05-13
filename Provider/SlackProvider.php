@@ -162,7 +162,7 @@ class SlackProvider implements ProviderInterface
             self::API_URL,
             [
                 'headers' => $this->buildRequestHeaders(),
-                'body'    => json_encode($this->buildRequestBody($sms)),
+                'json'    => $this->buildRequestBody($sms),
             ]
         );
         $jsonResponse = json_decode($response->getBody()->getContents(), true);

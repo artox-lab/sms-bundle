@@ -29,18 +29,11 @@ class InfobipProvider implements ProviderInterface
     protected const API_CALL_RETRIES = 3;
 
     /**
-     * Login
+     * API key
      *
      * @var string
      */
-    private $login;
-
-    /**
-     * Password
-     *
-     * @var string
-     */
-    private $password;
+    private $token;
 
     /**
      * Sender
@@ -70,15 +63,15 @@ class InfobipProvider implements ProviderInterface
     }
 
     /**
-     * Set login
+     * Set API key
      *
-     * @param string $login Login
+     * @param string $token API key
      *
      * @return $this
      */
-    public function setLogin(string $login): self
+    public function setToken(string $token): self
     {
-        $this->login = $login;
+        $this->token = $token;
 
         return $this;
     }
@@ -88,33 +81,9 @@ class InfobipProvider implements ProviderInterface
      *
      * @return string
      */
-    public function getLogin(): string
+    public function getToken(): string
     {
-        return $this->login;
-    }
-
-    /**
-     * Set password
-     *
-     * @param string $password Password
-     *
-     * @return $this
-     */
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * Password of provider
-     *
-     * @return string
-     */
-    public function getPassword(): string
-    {
-        return $this->password;
+        return $this->token;
     }
 
     /**
@@ -142,6 +111,42 @@ class InfobipProvider implements ProviderInterface
     }
 
     /**
+     * Build request headers
+     *
+     * @return array
+     */
+    public function buildRequestHeaders(): array
+    {
+        return [
+            'Authorization' => 'App ' . $this->getToken(),
+        ];
+    }
+
+    /**
+     * Build request body
+     *
+     * @param SmsInterface $sms Sms message
+     *
+     * @return array
+     */
+    public function buildRequestBody(SmsInterface $sms): array
+    {
+        return [
+            'messages' => [
+                [
+                    'from'         => $this->getSender(),
+                    'destinations' => [
+                        [
+                            'to' => $sms->getPhoneNumber(),
+                        ],
+                    ],
+                    'text'         => $sms->getMessage(),
+                ],
+            ],
+        ];
+    }
+
+    /**
      * Send message
      *
      * @param SmsInterface $sms Sms message
@@ -159,23 +164,8 @@ class InfobipProvider implements ProviderInterface
             'POST',
             $requestUrl,
             [
-                'auth' => [
-                    $this->getLogin(),
-                    $this->getPassword(),
-                ],
-                'json' => [
-                    'messages' => [
-                        [
-                            'from'         => $this->getSender(),
-                            'destinations' => [
-                                [
-                                    'to' => $sms->getPhoneNumber(),
-                                ],
-                            ],
-                            'text'         => $sms->getMessage(),
-                        ],
-                    ],
-                ],
+                'headers' => $this->buildRequestHeaders(),
+                'json'    => $this->buildRequestBody($sms),
             ]
         );
         $jsonResponse = json_decode($response->getBody()->getContents(), true);
