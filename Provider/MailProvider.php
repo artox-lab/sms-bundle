@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace ArtoxLab\Bundle\SmsBundle\Provider;
 
 use ArtoxLab\Bundle\SmsBundle\Sms\SmsInterface;
+use Psr\Http\Message\ResponseInterface;
 use Swift_Mailer;
 use Swift_Message;
 use Swift_SmtpTransport;
@@ -243,9 +244,9 @@ class MailProvider implements ProviderInterface
      *
      * @param SmsInterface $sms Sms message
      *
-     * @return bool
+     * @return ResponseInterface|null
      */
-    public function send(SmsInterface $sms): bool
+    public function send(SmsInterface $sms): ?ResponseInterface
     {
         $transport = new Swift_SmtpTransport(
             $this->getHost(),
@@ -277,7 +278,7 @@ class MailProvider implements ProviderInterface
 
         $mailer->send($message);
 
-        return true;
+        return null;
     }
 
 }

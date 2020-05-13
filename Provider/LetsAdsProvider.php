@@ -18,6 +18,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
+use Psr\Http\Message\ResponseInterface;
 
 class LetsAdsProvider implements ProviderInterface
 {
@@ -174,9 +175,9 @@ class LetsAdsProvider implements ProviderInterface
      * @throws GuzzleException
      * @throws LetsAdsException
      *
-     * @return bool
+     * @return ResponseInterface|null
      */
-    public function send(SmsInterface $sms): bool
+    public function send(SmsInterface $sms): ?ResponseInterface
     {
         $requestBody = $this->buildRequestBody($sms);
 
@@ -192,7 +193,7 @@ class LetsAdsProvider implements ProviderInterface
             throw new LetsAdsException(json_encode($xmlResponse));
         }
 
-        return true;
+        return $response;
     }
 
 }

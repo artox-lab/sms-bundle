@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace ArtoxLab\Bundle\SmsBundle\Provider;
 
 use ArtoxLab\Bundle\SmsBundle\Sms\SmsInterface;
+use Psr\Http\Message\ResponseInterface;
 
 interface ProviderInterface
 {
@@ -20,8 +21,8 @@ interface ProviderInterface
      *
      * @param SmsInterface $sms Sms message
      *
-     * @return bool
+     * @return ResponseInterface|null
      */
-    public function send(SmsInterface $sms): bool;
+    public function send(SmsInterface $sms): ?ResponseInterface;
 
 }

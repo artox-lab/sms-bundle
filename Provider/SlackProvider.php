@@ -18,6 +18,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
+use Psr\Http\Message\ResponseInterface;
 
 class SlackProvider implements ProviderInterface
 {
@@ -152,9 +153,9 @@ class SlackProvider implements ProviderInterface
      * @throws GuzzleException
      * @throws SlackException
      *
-     * @return bool
+     * @return ResponseInterface|null
      */
-    public function send(SmsInterface $sms): bool
+    public function send(SmsInterface $sms): ?ResponseInterface
     {
         $response     = $this->client->request(
             'POST',
@@ -170,7 +171,7 @@ class SlackProvider implements ProviderInterface
             throw new SlackException(json_encode($jsonResponse));
         }
 
-        return true;
+        return $response;
     }
 
 }

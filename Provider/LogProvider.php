@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace ArtoxLab\Bundle\SmsBundle\Provider;
 
 use ArtoxLab\Bundle\SmsBundle\Sms\SmsInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 class LogProvider implements ProviderInterface
@@ -38,9 +39,9 @@ class LogProvider implements ProviderInterface
      *
      * @param SmsInterface $sms Sms message
      *
-     * @return bool
+     * @return ResponseInterface|null
      */
-    public function send(SmsInterface $sms): bool
+    public function send(SmsInterface $sms): ?ResponseInterface
     {
         $this->logger->info(
             sprintf(
@@ -50,7 +51,7 @@ class LogProvider implements ProviderInterface
             )
         );
 
-        return true;
+        return null;
     }
 
 }

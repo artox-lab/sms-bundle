@@ -18,6 +18,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
+use Psr\Http\Message\ResponseInterface;
 
 class SmsLineProvider implements ProviderInterface
 {
@@ -192,9 +193,9 @@ class SmsLineProvider implements ProviderInterface
      * @throws GuzzleException
      * @throws SmsLineException
      *
-     * @return bool
+     * @return ResponseInterface|null
      */
-    public function send(SmsInterface $sms): bool
+    public function send(SmsInterface $sms): ?ResponseInterface
     {
         $requestUrl  = sprintf('%s/v3/messages/single/sms', self::API_URL);
         $requestBody = $this->buildRequestBody($sms);
@@ -215,7 +216,7 @@ class SmsLineProvider implements ProviderInterface
             throw new SmsLineException(json_encode($jsonResponse));
         }
 
-        return true;
+        return $response;
     }
 
 }
