@@ -52,6 +52,7 @@ You can define as many provider configurations as you want. Available providers 
  * [SmsLine](Resources/docs/providers/sms_line.md) [mobilemarketing.by]
  * [LetsAds](Resources/docs/providers/lets_ads.md) [letsads.com]
  * [InfoBip](Resources/docs/providers/infobip.md) [infobip.com]
+ * [SmsTraffic](Resources/docs/providers/sms_traffic.md) [smstraffic.ru]
 
 For debug:
  * [Log](Resources/docs/providers/log.md)

@@ -18,6 +18,7 @@ use ArtoxLab\Bundle\SmsBundle\DependencyInjection\Factory\Provider\LogProviderFa
 use ArtoxLab\Bundle\SmsBundle\DependencyInjection\Factory\Provider\MailProviderFactory;
 use ArtoxLab\Bundle\SmsBundle\DependencyInjection\Factory\Provider\SlackProviderFactory;
 use ArtoxLab\Bundle\SmsBundle\DependencyInjection\Factory\Provider\SmsLineProviderFactory;
+use ArtoxLab\Bundle\SmsBundle\DependencyInjection\Factory\Provider\SmsTrafficProviderFactory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -48,6 +49,7 @@ class ArtoxLabSmsBundle extends Bundle
     {
         $extension = new ArtoxLabSmsExtension();
         $extension->addProviderFactory(new SmsLineProviderFactory());
+        $extension->addProviderFactory(new SmsTrafficProviderFactory());
         $extension->addProviderFactory(new LetsAdsProviderFactory());
         $extension->addProviderFactory(new InfobipProviderFactory());
         $extension->addProviderFactory(new MailProviderFactory());

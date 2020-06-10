@@ -11,6 +11,9 @@ services:
     artox_lab_sms.prototype.provider.infobip:
         class: ArtoxLab\Bundle\SmsBundle\Provider\InfobipProvider
 
+    artox_lab_sms.prototype.provider.sms_traffic:
+        class: ArtoxLab\Bundle\SmsBundle\Provider\SmsTrafficProvider
+
     artox_lab_sms.prototype.provider.mail:
         class: ArtoxLab\Bundle\SmsBundle\Provider\MailProvider
 
