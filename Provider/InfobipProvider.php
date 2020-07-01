@@ -19,6 +19,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 class InfobipProvider implements ProviderInterface
 {
@@ -158,20 +159,24 @@ class InfobipProvider implements ProviderInterface
      */
     public function send(SmsInterface $sms): ?ResponseInterface
     {
-        $requestUrl = sprintf('%s/sms/2/text/advanced', self::API_URL);
+        try {
+            $requestUrl = sprintf('%s/sms/2/text/advanced', self::API_URL);
 
-        $response     = $this->client->request(
-            'POST',
-            $requestUrl,
-            [
-                'headers' => $this->buildRequestHeaders(),
-                'json'    => $this->buildRequestBody($sms),
-            ]
-        );
-        $jsonResponse = json_decode($response->getBody()->getContents(), true);
+            $response     = $this->client->request(
+                'POST',
+                $requestUrl,
+                [
+                    'headers' => $this->buildRequestHeaders(),
+                    'json'    => $this->buildRequestBody($sms),
+                ]
+            );
+            $jsonResponse = json_decode($response->getBody()->getContents(), true);
 
-        if (200 !== $response->getStatusCode()) {
-            throw new InfobipException(json_encode($jsonResponse));
+            if (200 !== $response->getStatusCode()) {
+                throw new InfobipException(json_encode($jsonResponse));
+            }
+        } catch (Throwable $e) {
+            throw new InfobipException($e->getMessage());
         }
 
         return $response;

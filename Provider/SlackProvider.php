@@ -19,6 +19,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 class SlackProvider implements ProviderInterface
 {
@@ -157,18 +158,22 @@ class SlackProvider implements ProviderInterface
      */
     public function send(SmsInterface $sms): ?ResponseInterface
     {
-        $response     = $this->client->request(
-            'POST',
-            self::API_URL,
-            [
-                'headers' => $this->buildRequestHeaders(),
-                'json'    => $this->buildRequestBody($sms),
-            ]
-        );
-        $jsonResponse = json_decode($response->getBody()->getContents(), true);
+        try {
+            $response     = $this->client->request(
+                'POST',
+                self::API_URL,
+                [
+                    'headers' => $this->buildRequestHeaders(),
+                    'json'    => $this->buildRequestBody($sms),
+                ]
+            );
+            $jsonResponse = json_decode($response->getBody()->getContents(), true);
 
-        if (true !== $jsonResponse['ok']) {
-            throw new SlackException(json_encode($jsonResponse));
+            if (true !== $jsonResponse['ok']) {
+                throw new SlackException(json_encode($jsonResponse));
+            }
+        } catch (Throwable $e) {
+            throw new SlackException($e->getMessage());
         }
 
         return $response;

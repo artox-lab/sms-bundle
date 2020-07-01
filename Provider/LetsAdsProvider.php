@@ -19,6 +19,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 class LetsAdsProvider implements ProviderInterface
 {
@@ -179,18 +180,22 @@ class LetsAdsProvider implements ProviderInterface
      */
     public function send(SmsInterface $sms): ?ResponseInterface
     {
-        $requestBody = $this->buildRequestBody($sms);
+        try {
+            $requestBody = $this->buildRequestBody($sms);
 
-        $response = $this->client->request(
-            'POST',
-            self::API_URL,
-            ['body' => $requestBody]
-        );
+            $response = $this->client->request(
+                'POST',
+                self::API_URL,
+                ['body' => $requestBody]
+            );
 
-        $xmlResponse = $response->getBody()->getContents();
+            $xmlResponse = $response->getBody()->getContents();
 
-        if (200 !== $response->getStatusCode()) {
-            throw new LetsAdsException(json_encode($xmlResponse));
+            if (200 !== $response->getStatusCode()) {
+                throw new LetsAdsException(json_encode($xmlResponse));
+            }
+        } catch (Throwable $e) {
+            throw new LetsAdsException($e->getMessage());
         }
 
         return $response;

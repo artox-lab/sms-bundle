@@ -19,6 +19,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 class SmsLineProvider implements ProviderInterface
 {
@@ -197,22 +198,26 @@ class SmsLineProvider implements ProviderInterface
      */
     public function send(SmsInterface $sms): ?ResponseInterface
     {
-        $requestUrl  = sprintf('%s/v3/messages/single/sms', self::API_URL);
-        $requestBody = $this->buildRequestBody($sms);
-        $signature   = $this->getHash('messagessinglesms' . json_encode($requestBody));
+        try {
+            $requestUrl  = sprintf('%s/v3/messages/single/sms', self::API_URL);
+            $requestBody = $this->buildRequestBody($sms);
+            $signature   = $this->getHash('messagessinglesms' . json_encode($requestBody));
 
-        $response     = $this->client->request(
-            'POST',
-            $requestUrl,
-            [
-                'headers' => $this->buildRequestHeaders($signature),
-                'json'    => $requestBody,
-            ]
-        );
-        $jsonResponse = json_decode($response->getBody()->getContents(), true);
+            $response     = $this->client->request(
+                'POST',
+                $requestUrl,
+                [
+                    'headers' => $this->buildRequestHeaders($signature),
+                    'json'    => $requestBody,
+                ]
+            );
+            $jsonResponse = json_decode($response->getBody()->getContents(), true);
 
-        if (200 !== $response->getStatusCode()) {
-            throw new SmsLineException(json_encode($jsonResponse));
+            if (200 !== $response->getStatusCode()) {
+                throw new SmsLineException(json_encode($jsonResponse));
+            }
+        } catch (Throwable $e) {
+            throw new SmsLineException($e->getMessage());
         }
 
         return $response;
